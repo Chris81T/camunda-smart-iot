@@ -1,6 +1,6 @@
 package de.ckthomas.smart.iot.camunda.listeners
 
-import de.ckthomas.smart.iot.SmartIotConsts
+import de.ckthomas.smart.iot.Constants
 import de.ckthomas.smart.iot.logFor
 import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.ExecutionListener
@@ -27,7 +27,7 @@ abstract class AbstractMqttExecutionListener(
             .repositoryService
             .getBpmnModelInstance(execution.processDefinitionId)
             .getModelElementById<ModelElementInstance>(signalRef ?: throw NoSuchElementException("No signalRef is given!"))
-            .getAttributeValue(SmartIotConsts.EngineListener.ELEM_SIGNAL_NAME)
+            .getAttributeValue(Constants.EngineListener.ELEM_SIGNAL_NAME)
 
     protected fun getResultVariableName(execution: DelegateExecution): String? =
         execution.bpmnModelElementInstance
@@ -35,7 +35,7 @@ abstract class AbstractMqttExecutionListener(
             .elementsQuery
             .filterByType(CamundaProperties::class.java)
             .singleResult()
-            .camundaProperties.firstOrNull { camundaProperty -> SmartIotConsts.EngineListener.EXT_PROP_RESULT_VAR_NAME == camundaProperty.camundaName }
+            .camundaProperties.firstOrNull { camundaProperty -> Constants.EngineListener.EXT_PROP_RESULT_VAR_NAME == camundaProperty.camundaName }
              ?.camundaValue
 
 }

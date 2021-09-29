@@ -1,6 +1,6 @@
 package de.ckthomas.smart.iot.camunda.listeners
 
-import de.ckthomas.smart.iot.SmartIotConsts
+import de.ckthomas.smart.iot.Constants
 import de.ckthomas.smart.iot.logFor
 import org.camunda.bpm.engine.delegate.ExecutionListener
 import org.camunda.bpm.engine.impl.bpmn.parser.AbstractBpmnParseListener
@@ -25,7 +25,7 @@ class SmartIotParseListener(
     private fun decorateSignalEvent(eventDefinition: Element, activity: ActivityImpl) {
         LOG.debug("Decorate given signal-event-definition: tagName = {}, text = {} with mqtt start + end listener",
             eventDefinition.tagName, eventDefinition.text)
-        val signalRef = eventDefinition.attribute(SmartIotConsts.EngineListener.ELEM_SIGNAL_REF)
+        val signalRef = eventDefinition.attribute(Constants.EngineListener.ELEM_SIGNAL_REF)
         startListener.signalRef = signalRef
         endListener.signalRef = signalRef
         activity.addListener(ExecutionListener.EVENTNAME_START, startListener)
