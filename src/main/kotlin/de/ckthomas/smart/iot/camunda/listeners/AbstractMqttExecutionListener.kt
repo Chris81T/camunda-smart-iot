@@ -14,11 +14,11 @@ import org.camunda.bpm.model.xml.instance.ModelElementInstance
  * Check license details @ project root
  */
 abstract class AbstractMqttExecutionListener(
-    protected val signalRef: String,
     listenerClass: Class<out AbstractMqttExecutionListener>
 ) : ExecutionListener {
 
     private var signalName: String? = null
+    var signalRef: String? = null
 
     protected val LOG = logFor(listenerClass)
 
@@ -26,7 +26,7 @@ abstract class AbstractMqttExecutionListener(
         signalName ?: execution.processEngineServices
             .repositoryService
             .getBpmnModelInstance(execution.processDefinitionId)
-            .getModelElementById<ModelElementInstance>(signalRef)
+            .getModelElementById<ModelElementInstance>(signalRef ?: throw NoSuchElementException("No signalRef is given!"))
             .getAttributeValue(SmartIotConsts.EngineListener.ELEM_SIGNAL_NAME)
 
     protected fun getResultVariableName(execution: DelegateExecution): String? =

@@ -1,6 +1,7 @@
 package de.ckthomas.smart.iot.camunda.listeners
 
 import org.camunda.bpm.engine.delegate.DelegateExecution
+import org.springframework.stereotype.Component
 
 /**
  * Author: Christian Thomas
@@ -8,9 +9,15 @@ import org.camunda.bpm.engine.delegate.DelegateExecution
  *
  * Check license details @ project root
  */
-class MqttExecutionEndListener(signalRef: String) : AbstractMqttExecutionListener(signalRef, MqttExecutionEndListener::class.java) {
+@Component
+class MqttExecutionEndListener() : AbstractMqttExecutionListener(MqttExecutionEndListener::class.java) {
 
     override fun notify(execution: DelegateExecution?) {
-        TODO("Not yet implemented")
+        val processInstanceId = execution?.processInstanceId
+        val topic = getSignalName(execution!!)
+
+        LOG.info("About to stop listening to Mqtt topic = {}, ProcessInstanceId = {}", topic, processInstanceId)
+
+        LOG.warn("TODO - Not yet implemented!")
     }
 }

@@ -30,6 +30,6 @@ class SpringBootConfig {
     }
 
     @Configuration
-    @ComponentScan(basePackages = ["de.ckthomas.smart.iot.camunda.plugins"])
+    @ComponentScan(basePackages = ["de.ckthomas.smart.iot.camunda.plugins", "de.ckthomas.smart.iot.camunda.listeners"])
     class ComponentScanConfiguration {}
 }

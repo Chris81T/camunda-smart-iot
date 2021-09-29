@@ -1,9 +1,11 @@
 package de.ckthomas.smart.iot.camunda.plugins
 
+import de.ckthomas.smart.iot.camunda.listeners.SmartIotParseListener
 import de.ckthomas.smart.iot.logFor
 import org.camunda.bpm.engine.impl.cfg.AbstractProcessEnginePlugin
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl
 import org.springframework.context.annotation.Configuration
+import java.util.ArrayList
 
 /**
  * Author: Christian Thomas
@@ -12,13 +14,19 @@ import org.springframework.context.annotation.Configuration
  * Check license details @ project root
  */
 @Configuration
-class SmartIotPlugin : AbstractProcessEnginePlugin() {
+class SmartIotPlugin(private val parseListener: SmartIotParseListener) : AbstractProcessEnginePlugin() {
 
     private val LOG = logFor(SmartIotPlugin::class.java)
 
     override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl?) {
         super.preInit(processEngineConfiguration)
         LOG.info("Pre-initiation phase...")
+
+        processEngineConfiguration?.let {
+            val listeners = it.customPreBPMNParseListeners ?: ArrayList()
+            listeners.add(parseListener)
+            it.customPreBPMNParseListeners = listeners
+        } ?: LOG.warn("No process engine configuration is given!")
     }
 
     override fun postInit(processEngineConfiguration: ProcessEngineConfigurationImpl?) {
