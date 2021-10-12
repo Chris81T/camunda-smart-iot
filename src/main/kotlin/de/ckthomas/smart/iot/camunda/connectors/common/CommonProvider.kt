@@ -2,6 +2,7 @@ package de.ckthomas.smart.iot.camunda.connectors.common
 
 import de.ckthomas.smart.iot.Constants
 import de.ckthomas.smart.iot.logFor
+import de.ckthomas.smart.iot.multiLet
 import org.camunda.connect.spi.Connector
 import org.camunda.connect.spi.ConnectorProvider
 
@@ -23,6 +24,15 @@ class CommonProvider(providerClass: Class<out CommonProvider>) : ConnectorProvid
 
     override fun createConnectorInstance(): Connector<*> {
         LOG.info("About to create a common connector instance for basePath = {}", basePath)
-        return CommonConnector(connectorId, basePath, authKey, authVal)
+        val values = listOf(authKey, authVal, basePath)
+
+        if (multiLet(values)) {
+            return CommonConnector(connectorId, basePath!!, authKey!!, authVal!!)
+        }
+
+        val msg = "Some of the required values - authKey, authVal or basePath or not set properly!"
+        LOG.error("$msg Values = {}", values)
+
+        throw NoSuchElementException(msg)
     }
 }
