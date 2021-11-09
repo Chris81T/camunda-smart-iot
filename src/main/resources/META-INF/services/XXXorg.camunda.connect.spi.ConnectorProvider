@@ -1,0 +1,4 @@
+de.ckthomas.smart.iot.camunda.connectors.common.CommonProvider
+de.ckthomas.smart.iot.camunda.connectors.hassio.switchonoff.SwitchProvider
+de.ckthomas.smart.iot.camunda.connectors.hassio.cover.CoverProvider
+de.ckthomas.smart.iot.camunda.connectors.hassio.light.LightProvider

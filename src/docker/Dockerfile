@@ -1,8 +1,11 @@
-FROM camunda/camunda-bpm-platform:run-7.15.0
+FROM camunda/camunda-bpm-platform:run-7.16.0
 LABEL Christian Thomas <christian@ckthomas.de>
 
 # copy hassio engine plugin in lib folder (activated over bpm-platform.xml)
 COPY ./target/camunda-smart-iot-1.0.0-SNAPSHOT.jar ./configuration/userlib/camunda-smart-iot.jar
+
+# copy custom configuration
+COPY ./src/docker/configuration/ ./configuration/
 
 # copy serveral 3rd party libs like kotlin and Co
 COPY ./target/lib/ ./configuration/userlib/

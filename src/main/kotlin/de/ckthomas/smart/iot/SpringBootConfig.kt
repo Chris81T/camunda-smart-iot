@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
+
 import javax.annotation.PostConstruct
 
 /**
@@ -26,7 +27,7 @@ class SpringBootConfig {
 
     @PostConstruct
     fun init() {
-       LOG.info("C A M U N D A - S M A R T - I O T # IS - B O O T I N G - U P ...")
+        LOG.info("C A M U N D A - S M A R T - I O T # IS - B O O T I N G - U P ...")
     }
 
     @Configuration
