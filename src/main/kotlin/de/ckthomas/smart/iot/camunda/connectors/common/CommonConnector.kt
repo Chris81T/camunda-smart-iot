@@ -43,15 +43,15 @@ class CommonConnector(
 
     private val LOG = logFor(CommonConnector::class.java)
 
-    private fun getRestServiceClient(requestParameters: Map<String, Any>): RestServiceClient? {
-        return if (RestServiceClientFactory.isNotInstantiated()) {
-            val basePath: String = checkParam(basePath, PluginConsts.Common.BASE_PATH, requestParameters)
-            val authKey: String = checkParam(authKey, PluginConsts.Common.AUTH_KEY, requestParameters)
-            val authValue: String = checkParam(authValue, PluginConsts.Common.AUTH_VAL, requestParameters)
-            RestServiceClientFactory.getInstance(basePath, authKey, authValue)
-        } else {
-            RestServiceClientFactory.getInstance()
-        }
+    private fun getRestServiceClient(requestParameters: Map<String, Any>): String? /* RestServiceCLient? */ {
+//        return if (RestServiceClientFactory.isNotInstantiated()) {
+//            val basePath: String = checkParam(basePath, PluginConsts.Common.BASE_PATH, requestParameters)
+//            val authKey: String = checkParam(authKey, PluginConsts.Common.AUTH_KEY, requestParameters)
+//            val authValue: String = checkParam(authValue, PluginConsts.Common.AUTH_VAL, requestParameters)
+//            RestServiceClientFactory.getInstance(basePath, authKey, authValue)
+//        } else {
+return null!! //            RestServiceClientFactory.getInstance()
+//        }
     }
 
     protected fun createUrl(path: String, domain: String, service: String) = "$path/$domain/$service"
@@ -68,7 +68,7 @@ class CommonConnector(
         val domain = requestParams[Constants.Common.KEY_URL_DOMAIN] as String
         val service = requestParams[Constants.Common.KEY_URL_SERVICE] as String
 
-        return perform(request, createUrl(path, domain, service), jsonBody)
+        return null!! // perform(request, createUrl(path, domain, service), jsonBody)
     }
 
 }
