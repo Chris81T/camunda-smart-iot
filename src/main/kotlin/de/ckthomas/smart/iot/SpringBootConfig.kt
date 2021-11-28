@@ -1,5 +1,6 @@
 package de.ckthomas.smart.iot
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfigureOrder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.ComponentScan
@@ -17,6 +18,9 @@ import javax.annotation.PostConstruct
  * Ordered.LOWEST_PRECEDENCE -> this is configured last
  * @ConditionalOnBean -> perform this here only, if the process-engine exists
  *
+ * Example how to override application properties while using docker-compose (etc):
+ *     https://www.tutorialworks.com/spring-boot-kubernetes-override-properties/#:~:text=To%20override%20your%20Spring%20Boot%20application%20properties%20when,the%20environment%20variables%20that%20you%20want%20to%20override.
+ *
  */
 @Configuration
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
@@ -33,4 +37,19 @@ class SpringBootConfig {
     @Configuration
     @ComponentScan(basePackages = ["de.ckthomas.smart.iot.camunda.plugins", "de.ckthomas.smart.iot.camunda.listeners"])
     class ComponentScanConfiguration {}
+
+    @Configuration
+    class MqttConfiguration {
+
+        @Value("\${mqtt.broker}")
+        lateinit var brokerUrl: String
+
+        @Value("\${mqtt.username}")
+        lateinit var username: String
+
+        @Value("\${mqtt.password}")
+        lateinit var password: String
+
+
+    }
 }
