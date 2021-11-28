@@ -1,7 +1,7 @@
 package de.ckthomas.smart.iot.camunda.connectors.common
 
 import com.google.gson.Gson
-import de.ckthomas.smart.iot.Constants
+import de.ckthomas.smart.iot.IotConstants
 import de.ckthomas.smart.iot.exceptions.SmartIotException
 import de.ckthomas.smart.iot.logFor
 import de.ckthomas.smart.iot.services.RestServiceClient
@@ -40,13 +40,14 @@ class CommonRequest(connector: Connector<*>) : AbstractConnectorRequest<CommonRe
  *
  * Check license details @ project root
  */
-class CommonConnector(
+open class CommonConnector(
     connectorId: String,
     private val basePath: String,
     private val authKey: String,
     private val authValue: String) : AbstractConnector<CommonRequest, CommonResponse>(connectorId) {
 
-    private val LOG = logFor(CommonConnector::class.java)
+    protected val LOG = logFor(CommonConnector::class.java)
+
     private val gson = Gson()
 
     private fun checkParam(fallbackValue: String, key: String, requestParameters: Map<String, Any>): String =
@@ -54,25 +55,25 @@ class CommonConnector(
 
     private fun getRestServiceClient(requestParameters: Map<String, Any>): RestServiceClient? {
         return if (RestServiceClientFactory.isNotInstantiated()) {
-            val basePath: String = checkParam(basePath, Constants.Common.BASE_PATH, requestParameters)
-            val authKey: String = checkParam(authKey, Constants.Common.AUTH_KEY, requestParameters)
-            val authValue: String = checkParam(authValue, Constants.Common.AUTH_VAL, requestParameters)
+            val basePath: String = checkParam(basePath, IotConstants.Common.BASE_PATH, requestParameters)
+            val authKey: String = checkParam(authKey, IotConstants.Common.AUTH_KEY, requestParameters)
+            val authValue: String = checkParam(authValue, IotConstants.Common.AUTH_VAL, requestParameters)
             RestServiceClientFactory.getInstance(basePath, authKey, authValue)
         } else {
             RestServiceClientFactory.getInstance()
         }
     }
 
-    protected fun toJson(map: Map<String, Any>): String = gson.toJson(map)
+    protected fun toJson(map: MutableMap<String, Any?>): String = gson.toJson(map)
 
     protected fun createUrl(path: String, domain: String, service: String): String = "$path/$domain/$service"
 
     protected fun createServiceUrl(domain: String, service: String): String =
-        createUrl(Constants.Common.PATH_SERVICES, domain, service)
+        createUrl(IotConstants.Common.PATH_SERVICES, domain, service)
 
     override fun createRequest(): CommonRequest = CommonRequest(this)
 
-    protected fun perform(request: CommonRequest, url: String?, jsonBody: String?): ConnectorResponse? {
+    protected fun perform(request: CommonRequest, url: String?, jsonBody: String?): ConnectorResponse {
         return try {
             val requestParameters = request.requestParameters
             LOG.info(
@@ -114,12 +115,12 @@ class CommonConnector(
 
         LOG.info("About to execute CommonConnector with given request parameters = {}", requestParams)
 
-        val jsonBody = requestParams[Constants.Common.KEY_JSON_BODY] as String
-        val path = requestParams[Constants.Common.KEY_URL_PATH] as String
-        val domain = requestParams[Constants.Common.KEY_URL_DOMAIN] as String
-        val service = requestParams[Constants.Common.KEY_URL_SERVICE] as String
+        val jsonBody = requestParams[IotConstants.Common.KEY_JSON_BODY] as String
+        val path = requestParams[IotConstants.Common.KEY_URL_PATH] as String
+        val domain = requestParams[IotConstants.Common.KEY_URL_DOMAIN] as String
+        val service = requestParams[IotConstants.Common.KEY_URL_SERVICE] as String
 
-        return null!! // perform(request, createUrl(path, domain, service), jsonBody)
+        return perform(request, createUrl(path, domain, service), jsonBody)
     }
 
 }

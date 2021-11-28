@@ -6,7 +6,7 @@ package de.ckthomas.smart.iot
  *
  * Check license details @ project root
  */
-object Constants {
+object IotConstants {
 
     object ConnectorIds {
         const val ID_COMMON = "hassio-common"
