@@ -13,7 +13,7 @@ import org.camunda.connect.spi.ConnectorProvider
  *
  * Check license details @ project root
  */
-open class CommonProvider(providerClass: Class<out CommonProvider>) : ConnectorProvider {
+open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvider::class.java) : ConnectorProvider {
 
     protected val LOG = logFor(providerClass)
 
