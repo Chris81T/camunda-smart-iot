@@ -17,9 +17,9 @@ class MqttExecutionStartListener() : AbstractMqttExecutionListener(MqttExecution
         val topic = getSignalName(execution!!)
         val resultVariable = getResultVariableName(execution)
 
-        LOG.info("About to start listening over factory to Mqtt topic = {}, ProcessInstanceId = {}, " +
+        logger.info("About to start listening over factory to Mqtt topic = {}, ProcessInstanceId = {}, " +
                     "resultVariable = {}", topic, processInstanceId, resultVariable)
 
-        LOG.warn("TODO - Not yet implemented!")
+        logger.warn("TODO - Not yet implemented!")
     }
 }

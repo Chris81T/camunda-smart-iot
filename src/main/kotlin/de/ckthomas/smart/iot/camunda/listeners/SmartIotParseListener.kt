@@ -20,10 +20,10 @@ class SmartIotParseListener(
     private val endListener: MqttExecutionEndListener
 ) : AbstractBpmnParseListener() {
 
-    private val LOG = logFor(SmartIotParseListener::class.java)
+    private val logger = logFor(SmartIotParseListener::class.java)
 
     private fun decorateSignalEvent(eventDefinition: Element, activity: ActivityImpl) {
-        LOG.debug("Decorate given signal-event-definition: tagName = {}, text = {} with mqtt start + end listener",
+        logger.debug("Decorate given signal-event-definition: tagName = {}, text = {} with mqtt start + end listener",
             eventDefinition.tagName, eventDefinition.text)
         val signalRef = eventDefinition.attribute(IotConstants.EngineListener.ELEM_SIGNAL_REF)
         startListener.signalRef = signalRef

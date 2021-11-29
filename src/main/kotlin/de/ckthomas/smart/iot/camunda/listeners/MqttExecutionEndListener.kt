@@ -16,8 +16,8 @@ class MqttExecutionEndListener() : AbstractMqttExecutionListener(MqttExecutionEn
         val processInstanceId = execution?.processInstanceId
         val topic = getSignalName(execution!!)
 
-        LOG.info("About to stop listening to Mqtt topic = {}, ProcessInstanceId = {}", topic, processInstanceId)
+        logger.info("About to stop listening to Mqtt topic = {}, ProcessInstanceId = {}", topic, processInstanceId)
 
-        LOG.warn("TODO - Not yet implemented!")
+        logger.warn("TODO - Not yet implemented!")
     }
 }

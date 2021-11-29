@@ -6,6 +6,7 @@ import org.camunda.bpm.engine.delegate.DelegateExecution
 import org.camunda.bpm.engine.delegate.ExecutionListener
 import org.camunda.bpm.model.bpmn.instance.camunda.CamundaProperties
 import org.camunda.bpm.model.xml.instance.ModelElementInstance
+import org.slf4j.Logger
 
 /**
  * Author: Christian Thomas
@@ -20,7 +21,7 @@ abstract class AbstractMqttExecutionListener(
     private var signalName: String? = null
     var signalRef: String? = null
 
-    protected val LOG = logFor(listenerClass)
+    protected val logger = logFor(listenerClass)
 
     protected fun getSignalName(execution: DelegateExecution): String =
         signalName ?: execution.processEngineServices

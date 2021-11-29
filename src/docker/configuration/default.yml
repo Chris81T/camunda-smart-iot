@@ -24,3 +24,10 @@ spring.datasource:
 # https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-static-content
 spring.web.resources:
   static-locations: NULL
+
+# Custom configuration for smart iot components
+iot:
+  mqtt:
+    broker-url: tcp://mosquitto:1883
+    username: mrx
+    password: mysecret

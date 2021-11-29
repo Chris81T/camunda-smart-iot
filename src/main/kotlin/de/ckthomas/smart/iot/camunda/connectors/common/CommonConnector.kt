@@ -46,7 +46,7 @@ open class CommonConnector(
     private val authKey: String,
     private val authValue: String) : AbstractConnector<CommonRequest, CommonResponse>(connectorId) {
 
-    protected val LOG = logFor(CommonConnector::class.java)
+    protected val logger = logFor(CommonConnector::class.java)
 
     private val gson = Gson()
 
@@ -76,7 +76,7 @@ open class CommonConnector(
     protected fun perform(request: CommonRequest, url: String?, jsonBody: String?): ConnectorResponse {
         return try {
             val requestParameters = request.requestParameters
-            LOG.info(
+            logger.info(
                 "Executing operation. Given common-request = {}, given request parameters = {}, given url = {}, " +
                         "given json-body = {}",
                 request,
@@ -90,22 +90,22 @@ open class CommonConnector(
 
             if (serviceResponse.isSuccessful) {
                 val response = CommonResponse(serviceResponse)
-                LOG.info("Service call is executed. Response = {}", response)
+                logger.info("Service call is executed. Response = {}", response)
                 response
             } else {
                 val failure = serviceResponse.body!!.string()
-                LOG.error("Http Rest Request Execution failed! Message = {}", failure)
+                logger.error("Http Rest Request Execution failed! Message = {}", failure)
                 throw SmartIotException(failure)
             }
 
         } catch (e: IOException) {
-            LOG.error("Something went wrong during service execution!", e)
+            logger.error("Something went wrong during service execution!", e)
             throw SmartIotException(
                 "Could not perform execution. IOException (Service Call). Error Message = " +
                         e.message, e
             )
         } catch (e: Exception) {
-            LOG.error("Something went wrong during execution!", e)
+            logger.error("Something went wrong during execution!", e)
             throw SmartIotException("Could not perform execution. Error Message = " + e.message, e)
         }
     }
@@ -113,7 +113,7 @@ open class CommonConnector(
     override fun execute(request: CommonRequest): ConnectorResponse {
         val requestParams = request.requestParameters
 
-        LOG.info("About to execute CommonConnector with given request parameters = {}", requestParams)
+        logger.info("About to execute CommonConnector with given request parameters = {}", requestParams)
 
         val jsonBody = requestParams[IotConstants.Common.KEY_JSON_BODY] as String
         val path = requestParams[IotConstants.Common.KEY_URL_PATH] as String

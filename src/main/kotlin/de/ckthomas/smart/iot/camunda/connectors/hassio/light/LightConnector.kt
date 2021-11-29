@@ -48,7 +48,7 @@ class LightConnector(
 
     override fun execute(request: CommonRequest): ConnectorResponse {
         val requestParameters = request.requestParameters
-        LOG.info("About to execute {} with given request parameters = {}", javaClass.simpleName, requestParameters)
+        logger.info("About to execute {} with given request parameters = {}", javaClass.simpleName, requestParameters)
 
         val service = requestParameters[IotConstants.Common.KEY_URL_SERVICE] as String?
         val url = createServiceUrl(IotConstants.Light.DOMAIN, service!!)

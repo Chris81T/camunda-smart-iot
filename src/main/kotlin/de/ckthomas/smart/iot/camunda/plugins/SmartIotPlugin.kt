@@ -16,22 +16,22 @@ import java.util.ArrayList
 @Configuration
 class SmartIotPlugin(private val parseListener: SmartIotParseListener) : AbstractProcessEnginePlugin() {
 
-    private val LOG = logFor(SmartIotPlugin::class.java)
+    private val logger = logFor(SmartIotPlugin::class.java)
 
     override fun preInit(processEngineConfiguration: ProcessEngineConfigurationImpl?) {
         super.preInit(processEngineConfiguration)
-        LOG.info("Pre-initiation phase...")
+        logger.info("Pre-initiation phase...")
 
         processEngineConfiguration?.let {
             val listeners = it.customPreBPMNParseListeners ?: ArrayList()
             listeners.add(parseListener)
             it.customPreBPMNParseListeners = listeners
-        } ?: LOG.warn("No process engine configuration is given!")
+        } ?: logger.warn("No process engine configuration is given!")
     }
 
     override fun postInit(processEngineConfiguration: ProcessEngineConfigurationImpl?) {
         super.postInit(processEngineConfiguration)
-        LOG.info("Post-initiation phase...")
+        logger.info("Post-initiation phase...")
     }
 
 }

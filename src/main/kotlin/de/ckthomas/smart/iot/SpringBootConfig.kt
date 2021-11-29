@@ -41,15 +41,21 @@ class SpringBootConfig {
     @Configuration
     class MqttConfiguration {
 
-        @Value("\${mqtt.broker}")
+        @Value("\${iot.mqtt.broker-url}")
         lateinit var brokerUrl: String
 
-        @Value("\${mqtt.username}")
+        @Value("\${iot.mqtt.username}")
         lateinit var username: String
 
-        @Value("\${mqtt.password}")
+        @Value("\${iot.mqtt.password}")
         lateinit var password: String
 
+        private val logger = logFor(MqttConfiguration::class.java)
+
+        @PostConstruct
+        fun someTest() {
+            logger.info("C O N F I G U R A T I O N > > > > $brokerUrl, $username, $password")
+        }
 
     }
 }

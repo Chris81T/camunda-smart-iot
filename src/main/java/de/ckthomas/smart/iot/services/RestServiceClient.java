@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class RestServiceClient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestServiceClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RestServiceClient.class);
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -37,12 +37,12 @@ public class RestServiceClient {
     public Request.Builder createRequestBuilder(String url) {
         final String prefix = basePath != null ? basePath + "/" : "";
         final String finalUrl = prefix + url;
-        LOGGER.info("Using final url = {} for creating request builder", finalUrl);
+        logger.info("Using final url = {} for creating request builder", finalUrl);
 
         final Request.Builder builder = new Request.Builder()
                 .url(finalUrl);
         if (authKey != null && authValue != null) {
-            LOGGER.info("Adding header with authKey = {}, authValue = {}", authKey, "***secret***");
+            logger.info("Adding header with authKey = {}, authValue = {}", authKey, "***secret***");
             builder.addHeader(authKey, authValue);
         }
         return builder;

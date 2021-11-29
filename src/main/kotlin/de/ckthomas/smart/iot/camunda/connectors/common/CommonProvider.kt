@@ -15,7 +15,7 @@ import org.camunda.connect.spi.ConnectorProvider
  */
 open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvider::class.java) : ConnectorProvider {
 
-    protected val LOG = logFor(providerClass)
+    protected val logger = logFor(providerClass)
 
     protected val authKey: String? = System.getProperty(IotConstants.Common.AUTH_KEY)
     protected val authVal: String? = System.getProperty(IotConstants.Common.AUTH_VAL)
@@ -24,7 +24,7 @@ open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvi
     protected fun createConnectorInstanceSafety(connectorClass: Class<out CommonConnector>,
                                                 instantiateFn: (connectorId: String, basePath: String, authKey: String,
                                                 authValue: String) -> Connector<*>): Connector<*> {
-        LOG.info("About to create a connector instance = {} for basePath = {}", connectorClass.simpleName, basePath)
+        logger.info("About to create a connector instance = {} for basePath = {}", connectorClass.simpleName, basePath)
         val values = listOf(authKey, authVal, basePath)
 
         if (multiLet(values)) {
@@ -32,7 +32,7 @@ open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvi
         }
 
         val msg = "Some of the required values - authKey, authVal or basePath or not set properly!"
-        LOG.error("$msg (ConnectorType = ${connectorClass.simpleName}) Values = {}", values)
+        logger.error("$msg (ConnectorType = ${connectorClass.simpleName}) Values = {}", values)
 
         throw SmartIotException(msg)
     }
