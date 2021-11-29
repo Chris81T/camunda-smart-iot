@@ -17,6 +17,9 @@ open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvi
 
     protected val logger = logFor(providerClass)
 
+    // TODO?! https://confluence.jaytaala.com/display/TKB/Super+simple+approach+to+accessing+Spring+beans+from+non-Spring+managed+classes+and+POJOs
+
+    // Spring DI should not work here: https://forum.camunda.org/t/custom-connector-using-springs-dependency-injection/20835
     protected val authKey: String? = System.getProperty(IotConstants.Common.AUTH_KEY)
     protected val authVal: String? = System.getProperty(IotConstants.Common.AUTH_VAL)
     protected val basePath: String? = System.getProperty(IotConstants.Common.BASE_PATH)
