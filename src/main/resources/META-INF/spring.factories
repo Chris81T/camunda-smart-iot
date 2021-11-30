@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=de.ckthomas.smart.iot.SpringBootConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=de.ckthomas.smart.iot.SpringConfig,de.ckthomas.smart.iot.CamundaConfig

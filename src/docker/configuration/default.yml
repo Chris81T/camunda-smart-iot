@@ -29,5 +29,9 @@ spring.web.resources:
 iot:
   mqtt:
     broker-url: tcp://mosquitto:1883
-    username: mrx
-    password: mysecret
+    username: not-yet-set
+    password: not-yet-set
+  hassio:
+    auth-key: not-yet-set
+    auth-value: not-yet-set
+    base-path: not-yet-set

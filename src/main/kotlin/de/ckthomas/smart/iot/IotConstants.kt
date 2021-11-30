@@ -8,6 +8,10 @@ package de.ckthomas.smart.iot
  */
 object IotConstants {
 
+    object Configuration {
+        const val NOT_YET_SET = "not-yet-set"
+    }
+
     object ConnectorIds {
         const val ID_COMMON = "hassio-common"
         const val ID_SWITCH = "hassio-switch"
