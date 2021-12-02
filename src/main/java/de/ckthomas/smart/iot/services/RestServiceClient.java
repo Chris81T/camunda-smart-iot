@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
+ * TODO refactor this part to kotlin using the spring techniques
+ *
  * This facade provides common logic for a simpler usage.
  * @author Christian Thomas
  */

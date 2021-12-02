@@ -20,7 +20,7 @@ open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvi
     protected val logger = logFor(providerClass)
 
     // Spring DI is not working here: https://forum.camunda.org/t/custom-connector-using-springs-dependency-injection/20835
-    private val config: SpringConfig.HassioConfigData = SpringAppContext.getBean(SpringConfig.HassioConfigData::class.java)
+    private val config: SpringConfig.HassioData = SpringAppContext.getBean(SpringConfig.HassioData::class.java)
 
     protected fun createConnectorInstanceSafety(connectorClass: Class<out CommonConnector>,
                                                 instantiateFn: (connectorId: String, basePath: String, authKey: String,

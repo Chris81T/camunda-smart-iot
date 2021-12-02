@@ -12,6 +12,12 @@ object IotConstants {
         const val NOT_YET_SET = "not-yet-set"
     }
 
+    object Setup {
+        const val DMN_SETUP_DECISION_KEY = "smart-iot-setup"
+        const val DMN_SETUP_DECISION_INPUT_NAME = "key"
+        const val DMN_MQTT_PROCESS_START_TOPIC = "mqttProcessStartTopic"
+    }
+
     object ConnectorIds {
         const val ID_COMMON = "hassio-common"
         const val ID_SWITCH = "hassio-switch"

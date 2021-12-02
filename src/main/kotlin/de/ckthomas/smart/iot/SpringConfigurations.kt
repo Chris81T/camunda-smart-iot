@@ -1,5 +1,6 @@
 package de.ckthomas.smart.iot
 
+import de.ckthomas.smart.iot.services.MqttProcessStartService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfigureOrder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -9,7 +10,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 
 import javax.annotation.PostConstruct
-import kotlin.math.log
 
 /**
  * Author: Christian Thomas
@@ -35,11 +35,12 @@ class SpringConfig {
 
     @Configuration
     @ComponentScan(basePackages = [
-        "de.ckthomas.smart.iot.components"
+        "de.ckthomas.smart.iot.components",
+        "de.ckthomas.smart.iot.services"
     ])
     class ComponentScanConfiguration {}
 
-    data class HassioConfigData(val authKey: String, val authValue: String, val basePath: String)
+    data class HassioData(val authKey: String, val authValue: String, val basePath: String)
 
     @Configuration
     class HassioConfiguration {
@@ -54,10 +55,10 @@ class SpringConfig {
         lateinit var basePath: String
 
         @Bean
-        fun createHassioConfigData() = HassioConfigData(authKey, authValue, basePath)
+        fun createHassioConfigData() = HassioData(authKey, authValue, basePath)
     }
 
-    data class MqttConfigData(val brokerUrl: String, val username: String, val password: String)
+    data class MqttData(val brokerUrl: String, val username: String, val password: String)
 
     @Configuration
     class MqttConfiguration {
@@ -72,7 +73,7 @@ class SpringConfig {
         lateinit var password: String
 
         @Bean
-        fun createMqttConfigData() = MqttConfigData(brokerUrl, username, password)
+        fun createMqttConfigData() = MqttData(brokerUrl, username, password)
     }
 }
 
@@ -92,13 +93,14 @@ class SpringConfig {
 @Configuration
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 @ConditionalOnBean(type = ["org.camunda.bpm.engine.ProcessEngine"])
-class CamundaConfig {
+class CamundaConfig(private val mqttProcessStartService: MqttProcessStartService) {
 
     private val logger = logFor(CamundaConfig::class.java)
 
     @PostConstruct
     fun init() {
         logger.info("C A M U N D A - S M A R T - I O T # <CAMUNDA-CONFIG> IS - B O O T I N G - U P ...")
+        mqttProcessStartService.bootstrapTopics()
     }
 
     @Configuration
