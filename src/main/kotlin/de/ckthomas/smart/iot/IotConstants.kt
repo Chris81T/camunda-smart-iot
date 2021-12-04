@@ -13,9 +13,10 @@ object IotConstants {
     }
 
     object Setup {
-        const val DMN_SETUP_DECISION_KEY = "smart-iot-setup"
-        const val DMN_SETUP_DECISION_INPUT_NAME = "key"
-        const val DMN_MQTT_PROCESS_START_TOPIC = "mqttProcessStartTopic"
+        const val DMN_SETUP_DECISION_KEY = "Decision_SmartIotSetup"
+        const val DMN_SETUP_DECISION_INPUT_NAME = "componentKey"
+        const val DMN_SETUP_DECISION_OUTPUT_NAME = "componentValue"
+        const val DMN_MQTT_PROCESS_START_TOPIC = "mqtt-start-process-topic"
     }
 
     object ConnectorIds {

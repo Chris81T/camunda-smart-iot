@@ -39,7 +39,7 @@ class MqttProcessStartService(
 
                 logger.info("Got following result = {}", result)
 
-                val outputValues = result.collectEntries<String>(IotConstants.Setup.DMN_MQTT_PROCESS_START_TOPIC)
+                val outputValues = result.collectEntries<String>(IotConstants.Setup.DMN_SETUP_DECISION_OUTPUT_NAME)
 
                 logger.info("Found following output values = {} to setup the startup subscriptions (mqtt -> process start)",
                     outputValues)
