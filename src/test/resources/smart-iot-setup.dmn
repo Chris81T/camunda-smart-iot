@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" id="Definitions_04wx3ch" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/2.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_04wx3ch" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="4.9.0">
   <decision id="smart-iot-setup" name="Setup Values">
-    <decisionTable id="DecisionTable_1fgdfos" hitPolicy="ANY">
-      <input id="Input_1" biodi:width="192">
+    <decisionTable id="DecisionTable_1fgdfos" hitPolicy="FIRST">
+      <input id="Input_1" biodi:width="192" camunda:inputVariable="key">
         <inputExpression id="InputExpression_1" typeRef="string">
-          <text>key</text>
+          <text></text>
         </inputExpression>
         <inputValues id="UnaryTests_08nwkve">
           <text>"mqttProcessStartTopic"</text>
         </inputValues>
       </input>
-      <output id="Output_1" name="value" typeRef="string" />
+      <output id="Output_1" name="value" typeRef="string" biodi:width="353" />
       <rule id="DecisionRule_1s4bodm">
         <inputEntry id="UnaryTests_1eug33x">
           <text>"mqttProcessStartTopic"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1u9ebi3">
-          <text>my/topic/switch/livingroom/1</text>
+          <text>"my/topic/switch/livingroom/1"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0152xwr">
         <inputEntry id="UnaryTests_0p4pcae">
-          <text>"mqttProcessStartTopic"</text>
+          <text>"mqttProcessStartTopic3"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1khdo7o">
-          <text>my/topic/switch/livingroom/2</text>
+          <text>"my/topic/switch/livingroom/2"</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_0g2xki3">
         <inputEntry id="UnaryTests_1xsd7wv">
-          <text>"mqttProcessStartTopic"</text>
+          <text>"mqttProcessStartTopic2"</text>
         </inputEntry>
         <outputEntry id="LiteralExpression_12r79ds">
-          <text>my/topic/switch/kitchen</text>
+          <text>"my/topic/switch/kitchen"</text>
         </outputEntry>
       </rule>
     </decisionTable>

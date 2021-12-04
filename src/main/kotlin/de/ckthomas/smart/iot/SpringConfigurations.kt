@@ -99,8 +99,12 @@ class CamundaConfig(private val mqttProcessStartService: MqttProcessStartService
 
     @PostConstruct
     fun init() {
-        logger.info("C A M U N D A - S M A R T - I O T # <CAMUNDA-CONFIG> IS - B O O T I N G - U P ...")
-        mqttProcessStartService.bootstrapTopics()
+        try {
+            logger.info("C A M U N D A - S M A R T - I O T # <CAMUNDA-CONFIG> IS - B O O T I N G - U P ...")
+            mqttProcessStartService.bootstrapTopics()
+        } catch (t: Throwable) {
+            logger.error("Something went wrong during init process! Check cause statement!", t)
+        }
     }
 
     @Configuration
