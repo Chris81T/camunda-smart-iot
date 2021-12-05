@@ -1,6 +1,8 @@
 package de.ckthomas.smart.iot
 
 import de.ckthomas.smart.iot.services.MqttProcessStartService
+import org.eclipse.paho.client.mqttv3.MqttClient
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfigureOrder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
+import java.util.*
 
 import javax.annotation.PostConstruct
 
@@ -74,6 +77,24 @@ class SpringConfig {
 
         @Bean
         fun createMqttConfigData() = MqttData(brokerUrl, username, password)
+
+        @Bean
+        fun createMqttPushClient(): MqttClient {
+            val mqttData = createMqttConfigData()
+
+            val options = MqttConnectOptions()
+            options.userName = mqttData.username
+            options.password = mqttData.password.toCharArray()
+
+            options.isAutomaticReconnect = true
+            options.isCleanSession = true
+
+            val uuid = "IOT_${UUID.randomUUID().toString()}"
+            val client = MqttClient(mqttData.brokerUrl, uuid)
+            client.connect(options)
+
+            return client
+        }
     }
 }
 

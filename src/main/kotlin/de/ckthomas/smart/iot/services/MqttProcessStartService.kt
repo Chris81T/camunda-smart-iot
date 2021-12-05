@@ -1,6 +1,7 @@
 package de.ckthomas.smart.iot.services
 
 import de.ckthomas.smart.iot.IotConstants
+import de.ckthomas.smart.iot.SpringConfig
 import de.ckthomas.smart.iot.logFor
 import org.camunda.bpm.engine.DecisionService
 import org.camunda.bpm.engine.ProcessEngineException
@@ -8,6 +9,7 @@ import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
 import org.springframework.stereotype.Service
+import kotlin.jvm.Throws
 
 /**
  * Author: Christian Thomas
@@ -18,9 +20,25 @@ import org.springframework.stereotype.Service
 @Service
 class MqttProcessStartService(
     private val repositoryService: RepositoryService,
+    private val runtimeService: RuntimeService,
     private val decisionService: DecisionService) {
 
     private val logger = logFor(MqttProcessStartService::class.java)
+
+    @Throws(Exception::class)
+    private fun evaluateSetupDmn(): List<String> {
+        val result = decisionService.evaluateDecisionTableByKey(IotConstants.Setup.DMN_SETUP_DECISION_KEY)
+            .variables(Variables.createVariables()
+                .putValue(IotConstants.Setup.DMN_SETUP_DECISION_INPUT_NAME, IotConstants.Setup.DMN_MQTT_PROCESS_START_TOPIC))
+            .evaluate()
+
+        return result.collectEntries<String>(IotConstants.Setup.DMN_SETUP_DECISION_OUTPUT_NAME)
+    }
+
+    @Throws(Exception::class)
+    private fun subscribeProcessStartTopics(mqttTopics: List<String>) {
+
+    }
 
     fun bootstrapTopics() {
         logger.info("About to boostrap topics...")
@@ -32,17 +50,12 @@ class MqttProcessStartService(
         if (setupDecision != null) {
             try {
                 logger.info("Found a Setup-Decision. About to evaluate it...")
-                val result = decisionService.evaluateDecisionTableByKey(IotConstants.Setup.DMN_SETUP_DECISION_KEY)
-                    .variables(Variables.createVariables()
-                        .putValue(IotConstants.Setup.DMN_SETUP_DECISION_INPUT_NAME, IotConstants.Setup.DMN_MQTT_PROCESS_START_TOPIC))
-                    .evaluate()
 
-                logger.info("Got following result = {}", result)
+                val mqttStartProcessTopics = evaluateSetupDmn()
+                logger.info("Found following mqttStartProcessTopics = {}. About to subscribe them...",
+                    mqttStartProcessTopics)
 
-                val outputValues = result.collectEntries<String>(IotConstants.Setup.DMN_SETUP_DECISION_OUTPUT_NAME)
-
-                logger.info("Found following output values = {} to setup the startup subscriptions (mqtt -> process start)",
-                    outputValues)
+                subscribeProcessStartTopics(mqttStartProcessTopics)
 
             } catch (e: ProcessEngineException) {
                 logger.error("Failed to evaluate setup decision! Check the cause statement!", e)
