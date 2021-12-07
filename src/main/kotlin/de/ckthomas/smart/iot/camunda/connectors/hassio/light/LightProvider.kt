@@ -20,10 +20,10 @@ class LightProvider : CommonProvider(LightProvider::class.java) {
 
     override fun createConnectorInstance(): Connector<*> {
         return createConnectorInstanceSafety(LightConnector::class.java) {
-                connectorId: String,
-                basePath: String,
-                authKey: String,
-                authValue: String -> LightConnector(connectorId, basePath, authKey, authValue)
+                connectorId,
+                basePath,
+                authKey,
+                authValue -> LightConnector(connectorId, basePath, authKey, authValue)
         }
     }
 }

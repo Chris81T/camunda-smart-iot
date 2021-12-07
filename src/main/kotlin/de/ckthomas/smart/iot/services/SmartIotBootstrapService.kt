@@ -1,13 +1,13 @@
 package de.ckthomas.smart.iot.services
 
 import de.ckthomas.smart.iot.IotConstants
-import de.ckthomas.smart.iot.SpringConfig
 import de.ckthomas.smart.iot.logFor
 import org.camunda.bpm.engine.DecisionService
 import org.camunda.bpm.engine.ProcessEngineException
 import org.camunda.bpm.engine.RepositoryService
 import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
+import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
 import kotlin.jvm.Throws
 
@@ -18,12 +18,12 @@ import kotlin.jvm.Throws
  * Check license details @ project root
  */
 @Service
-class MqttProcessStartService(
+class SmartIotBootstrapService(
     private val repositoryService: RepositoryService,
     private val runtimeService: RuntimeService,
     private val decisionService: DecisionService) {
 
-    private val logger = logFor(MqttProcessStartService::class.java)
+    private val logger = logFor(SmartIotBootstrapService::class.java)
 
     @Throws(Exception::class)
     private fun evaluateSetupDmn(): List<String> {
@@ -37,7 +37,15 @@ class MqttProcessStartService(
 
     @Throws(Exception::class)
     private fun subscribeProcessStartTopics(mqttTopics: List<String>) {
-
+        mqttTopics.forEach {
+            val subscription = MqttSubscription(
+                "UniqueServiceId",
+                it,
+                { topic, message ->
+                  logger.info("Incoming message for topic = {}. Message = {}", topic, message.payload)
+                }
+            )
+        }
     }
 
     fun bootstrapTopics() {

@@ -20,10 +20,10 @@ class SwitchProvider : CommonProvider(SwitchProvider::class.java) {
 
     override fun createConnectorInstance(): Connector<*> {
         return createConnectorInstanceSafety(SwitchConnector::class.java) {
-                connectorId: String,
-                basePath: String,
-                authKey: String,
-                authValue: String -> SwitchConnector(connectorId, basePath, authKey, authValue)
+                connectorId,
+                basePath,
+                authKey,
+                authValue -> SwitchConnector(connectorId, basePath, authKey, authValue)
         }
     }
 }

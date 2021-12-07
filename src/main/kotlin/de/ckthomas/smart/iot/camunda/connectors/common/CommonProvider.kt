@@ -42,9 +42,9 @@ open class CommonProvider(providerClass: Class<out CommonProvider> = CommonProvi
 
     override fun createConnectorInstance(): Connector<*> =
         createConnectorInstanceSafety(CommonConnector::class.java) {
-                connectorId: String,
-                basePath: String,
-                authKey: String,
-                authValue: String -> CommonConnector(connectorId, basePath, authKey, authValue)
+                connectorId,
+                basePath,
+                authKey,
+                authValue -> CommonConnector(connectorId, basePath, authKey, authValue)
         }
 }

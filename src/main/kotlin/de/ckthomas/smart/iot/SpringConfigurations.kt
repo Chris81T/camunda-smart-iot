@@ -1,14 +1,17 @@
 package de.ckthomas.smart.iot
 
-import de.ckthomas.smart.iot.services.MqttProcessStartService
-import org.eclipse.paho.client.mqttv3.MqttClient
+import de.ckthomas.smart.iot.services.MqttCallbackService
+import de.ckthomas.smart.iot.services.SmartIotBootstrapService
+import org.eclipse.paho.client.mqttv3.MqttAsyncClient
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.boot.autoconfigure.AutoConfigureOrder
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Scope
 import org.springframework.core.Ordered
 import java.util.*
 
@@ -78,8 +81,9 @@ class SpringConfig {
         @Bean
         fun createMqttConfigData() = MqttData(brokerUrl, username, password)
 
+        @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
         @Bean
-        fun createMqttPushClient(): MqttClient {
+        fun createMqttCallbackService(): MqttCallbackService {
             val mqttData = createMqttConfigData()
 
             val options = MqttConnectOptions()
@@ -90,10 +94,13 @@ class SpringConfig {
             options.isCleanSession = true
 
             val uuid = "IOT_${UUID.randomUUID().toString()}"
-            val client = MqttClient(mqttData.brokerUrl, uuid)
+            val client = MqttAsyncClient(mqttData.brokerUrl, uuid)
             client.connect(options)
 
-            return client
+            val mqttService = MqttCallbackService(client)
+            client.setCallback(mqttService)
+
+            return mqttService
         }
     }
 }
@@ -114,7 +121,7 @@ class SpringConfig {
 @Configuration
 @AutoConfigureOrder(Ordered.LOWEST_PRECEDENCE)
 @ConditionalOnBean(type = ["org.camunda.bpm.engine.ProcessEngine"])
-class CamundaConfig(private val mqttProcessStartService: MqttProcessStartService) {
+class CamundaConfig(private val smartIotBootstrapService: SmartIotBootstrapService) {
 
     private val logger = logFor(CamundaConfig::class.java)
 
@@ -122,7 +129,7 @@ class CamundaConfig(private val mqttProcessStartService: MqttProcessStartService
     fun init() {
         try {
             logger.info("C A M U N D A - S M A R T - I O T # <CAMUNDA-CONFIG> IS - B O O T I N G - U P ...")
-            mqttProcessStartService.bootstrapTopics()
+            smartIotBootstrapService.bootstrapTopics()
         } catch (t: Throwable) {
             logger.error("Something went wrong during init process! Check cause statement!", t)
         }

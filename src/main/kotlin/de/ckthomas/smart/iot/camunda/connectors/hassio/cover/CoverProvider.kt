@@ -18,10 +18,10 @@ class CoverProvider : CommonProvider(CoverProvider::class.java) {
 
     override fun createConnectorInstance(): Connector<*> {
         return createConnectorInstanceSafety(CoverConnector::class.java) {
-                connectorId: String,
-                basePath: String,
-                authKey: String,
-                authValue: String -> CoverConnector(connectorId, basePath, authKey, authValue)
+                connectorId,
+                basePath,
+                authKey,
+                authValue -> CoverConnector(connectorId, basePath, authKey, authValue)
         }
     }
 }
