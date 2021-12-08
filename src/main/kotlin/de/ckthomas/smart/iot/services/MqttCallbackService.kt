@@ -5,6 +5,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import java.util.*
+import kotlin.collections.HashMap
 
 
 /**
@@ -17,7 +19,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
  * Check license details @ project root
  */
 data class MqttSubscription(
-    val subscriptionId: String,
     val topic: String,
     val callbackFn: (topic: String, message: MqttMessage) -> Unit,
     val connectionLostFn: (cause: Throwable) -> Unit = {}
@@ -38,16 +39,41 @@ data class MqttSubscription(
  */
 class MqttCallbackService(private val mqttClient: MqttAsyncClient) : MqttCallback {
 
+    private val subscriptions = HashMap<String, MqttSubscription>()
+    private val logger = logFor(MqttCallbackService::class.java)
+
     override fun connectionLost(cause: Throwable) {
-        TODO("Not yet implemented")
+        logger.warn("Some connection lost! Throwable message = {}", cause.message)
+        subscriptions.values.forEach {
+            it.connectionLostFn(cause)
+        }
     }
 
     override fun messageArrived(topic: String, message: MqttMessage) {
-        TODO("Not yet implemented")
+        logger.info("Incoming message = {} for topic = {}", message, topic)
+        subscriptions.values
+            .filter { it.topic == topic }
+            .forEach { it.callbackFn(topic, message) }
     }
 
     override fun deliveryComplete(token: IMqttDeliveryToken) {
-        TODO("Not yet implemented")
+        logger.info("Delivery is complete. Token message = {}", token.message)
+    }
+
+    /**
+     * Use this method to subscribe your desired topic. When a message for that topic will arrive, the appropriate
+     * callbackFn will be called.
+     */
+    fun subscribe(subscription: MqttSubscription): String {
+        val id = UUID.randomUUID().toString()
+        logger.info("About to add incoming subscription = {} to internal map with id = {}.", subscription, id)
+        subscriptions[id] = subscription
+        return id
+    }
+
+    fun unsubscribe(subscriptionId: String) {
+        logger.info("About to remove subscription with id = {}", subscriptionId)
+        subscriptions.remove(subscriptionId)
     }
 
 }

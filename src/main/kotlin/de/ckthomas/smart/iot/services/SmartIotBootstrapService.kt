@@ -9,6 +9,7 @@ import org.camunda.bpm.engine.RuntimeService
 import org.camunda.bpm.engine.variable.Variables
 import org.eclipse.paho.client.mqttv3.MqttMessage
 import org.springframework.stereotype.Service
+import java.util.*
 import kotlin.jvm.Throws
 
 /**
@@ -19,6 +20,7 @@ import kotlin.jvm.Throws
  */
 @Service
 class SmartIotBootstrapService(
+    private val mqttService: MqttCallbackService,
     private val repositoryService: RepositoryService,
     private val runtimeService: RuntimeService,
     private val decisionService: DecisionService) {
@@ -37,15 +39,19 @@ class SmartIotBootstrapService(
 
     @Throws(Exception::class)
     private fun subscribeProcessStartTopics(mqttTopics: List<String>) {
-        mqttTopics.forEach {
+        val subscriptionIds = mqttTopics.map {
             val subscription = MqttSubscription(
-                "UniqueServiceId",
                 it,
                 { topic, message ->
-                  logger.info("Incoming message for topic = {}. Message = {}", topic, message.payload)
+                    logger.info("Incoming message for topic = {}. Message = {}", topic, message.payload)
+                    // TODO runtimeService.signal
                 }
             )
+
+            mqttService.subscribe(subscription)
         }
+
+        logger.info("Got following subscriptionIds = {}", subscriptionIds)
     }
 
     fun bootstrapTopics() {
