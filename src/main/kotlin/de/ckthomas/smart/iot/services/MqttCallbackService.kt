@@ -1,11 +1,15 @@
 package de.ckthomas.smart.iot.services
 
+import com.google.gson.Gson
+import com.google.gson.internal.LinkedTreeMap
 import de.ckthomas.smart.iot.logFor
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient
 import org.eclipse.paho.client.mqttv3.MqttCallback
 import org.eclipse.paho.client.mqttv3.MqttMessage
+import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 
@@ -24,6 +28,13 @@ data class MqttSubscription(
     val connectionLostFn: (cause: Throwable) -> Unit = {}
 )
 
+enum class ValueTypes {
+    PRIMITIVE,
+    JSON,
+    ARRAY,
+    UNKNOWN
+}
+
 /**
  * Author: Christian Thomas
  * Created on: 07.12.2021
@@ -39,8 +50,10 @@ data class MqttSubscription(
  */
 class MqttCallbackService(private val mqttClient: MqttAsyncClient) : MqttCallback {
 
-    private val subscriptions = HashMap<String, MqttSubscription>()
     private val logger = logFor(MqttCallbackService::class.java)
+
+    private val subscriptions = HashMap<String, MqttSubscription>()
+    private val gson = Gson()
 
     override fun connectionLost(cause: Throwable) {
         logger.warn("Some connection lost! Throwable message = {}", cause.message)
@@ -74,6 +87,32 @@ class MqttCallbackService(private val mqttClient: MqttAsyncClient) : MqttCallbac
     fun unsubscribe(subscriptionId: String) {
         logger.info("About to remove subscription with id = {}", subscriptionId)
         subscriptions.remove(subscriptionId)
+    }
+
+    fun disconnect() {
+        mqttClient.disconnect()
+    }
+
+    fun checkMessageType(message: MqttMessage): ValueTypes {
+        val messageAsStr = message.toString()
+        logger.info("check the type of the message (as string) = {}", messageAsStr)
+        try {
+            val deserializedVal = gson.fromJson(messageAsStr, Object::class.java)
+
+            if (LinkedTreeMap::class.java == deserializedVal.`class`) {
+                return ValueTypes.JSON
+            }
+
+            if (ArrayList::class.java == deserializedVal.`class`) {
+                return ValueTypes.ARRAY
+            }
+
+            // all the special values are check, so it should be a primitive value
+            return ValueTypes.PRIMITIVE
+        } catch (e: Exception) {
+            logger.error("Could not identify the required value type!", e)
+            return ValueTypes.UNKNOWN
+        }
     }
 
 }

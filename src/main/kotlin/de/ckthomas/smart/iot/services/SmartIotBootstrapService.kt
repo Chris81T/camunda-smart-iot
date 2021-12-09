@@ -44,7 +44,8 @@ class SmartIotBootstrapService(
                 it,
                 { topic, message ->
                     logger.info("Incoming message for topic = {}. Message = {}", topic, message.payload)
-                    // TODO runtimeService.signal
+                    runtimeService.createSignalEvent(topic)
+                        .send()
                 }
             )
 
